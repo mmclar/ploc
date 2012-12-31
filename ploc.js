@@ -126,7 +126,6 @@ function locate() {
 	mark(connection.P1, 'A'); 
 	mark(connection.P2, 'B'); 
 	mark(m, 'M');
-	mark({y:-75.17955792696408, x:39.95270058292888, z:200.45298693382182}, 'W');
 
 
 	// Fly to the midpoint, and look towards the points that were selected.
