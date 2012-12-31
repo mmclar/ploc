@@ -9,11 +9,16 @@ var l = closestConnection(
 	{P1:{x:0,y:0,z:1}, P2:{x:1,y:0,z:1}});
 if (l) alert('Parallel lines not detected.');
 
+// A simple example that should intersect at (2,2,2,).
 var l = closestConnection(
 	{P1:{x:0,y:0,z:0}, P2:{x:4,y:4,z:4}}, 
 	{P1:{x:4,y:0,z:0}, P2:{x:0,y:4,z:4}});
 if (!l) alert('Skew lines detected as parallel.');
 if (l.P1.x != 2) alert('Incorrect result.');
+
+// Simple midpoint test.
+var m = midpoint({x:0,y:0,z:0}, {x:1,y:0,z:0});
+if (Math.abs(m.x-.5) > eps) alert('Midpoint not correct.');
 </script>
 </body>
 </html>
