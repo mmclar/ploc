@@ -15,6 +15,7 @@
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
 	<script src="http://maps.google.com/maps?file=api&v=2&key=<?php echo $google_key; ?>&sensor=false" type="text/javascript"></script>
   <script src="http://www.google.com/jsapi?key=<?php echo $google_key; ?>"></script>
+  <script src="math.js"></script>
   <script src="ploc.js"></script>
   </head>
   <body onload="init();" style="font-family: arial, sans-serif; font-size: 13px; border: 0;">
