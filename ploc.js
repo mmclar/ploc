@@ -107,8 +107,9 @@ function makePlacemark(lat, lng, alt, altMode, iconStr) {
 
 function locate() {
 	// Find the line that connects p1,p2 and p3,p4 where they are closest to intersection.
+	var connection = closestConnection({P1:P1, P2:P2}, {P1:P3, P2:P4});
+	var midpoint = midpoint(connection);
+
 	// Mark the start, end, and mid-points of that line.
 	// Fly to the midpoint, and look towards the points that were selected.
-	alert('locating...');
 }
-
