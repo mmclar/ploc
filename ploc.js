@@ -105,11 +105,29 @@ function makePlacemark(lat, lng, alt, altMode, iconStr) {
 	return pm;
 }
 
+function mark(point, iconStr) {
+	var pm = makePlacemark(point.y, point.x, point.z, ge.ALTITUDE_ABSOLUTE, iconStr);
+	ge.getFeatures().appendChild(pm);
+	return pm;
+}
+
+function g(p) {
+	return { x:p.lon, y:p.lat, z:p.alt };
+}
+
 function locate() {
 	// Find the line that connects p1,p2 and p3,p4 where they are closest to intersection.
-	var connection = closestConnection({P1:P1, P2:P2}, {P1:P3, P2:P4});
-	var midpoint = midpoint(connection);
+	var connection = closestConnection(
+		{P1:g(points.P1), P2:g(points.P2)},
+		{P1:g(points.P3), P2:g(points.P4)});
+	var m = midpoint(connection.P1, connection.P2);
 
 	// Mark the start, end, and mid-points of that line.
+	mark(connection.P1, 'A'); 
+	mark(connection.P2, 'B'); 
+	mark(m, 'M');
+	mark({y:-75.17955792696408, x:39.95270058292888, z:200.45298693382182}, 'W');
+
+
 	// Fly to the midpoint, and look towards the points that were selected.
 }
