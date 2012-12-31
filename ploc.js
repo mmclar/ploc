@@ -24,8 +24,8 @@ function initCallback(pluginInstance) {
 	var camera = ge.createCamera('');
 	camera.setLatitude(39.95);
 	camera.setLongitude(-75.17);
-	camera.setTilt(80.0);
-	camera.setAltitude(100);
+	camera.setTilt(0.0);
+	camera.setAltitude(3000);
 	ge.getView().setAbstractView(camera);
 	
 	// Set the initial points values from the markup if they're there.
