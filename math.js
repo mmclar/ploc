@@ -1,8 +1,8 @@
 // Given a line segment defined by its endpoints, find its midpoint.
-function midpoint(L) {
+function midpoint(P1, P2) {
 	var p = {};
 	$(['x', 'y', 'z']).each(function(k, v) {
-		p[v] = (L.P1[v] + L.P2[v] / 2);
+		p[v] = (P1[v] + P2[v]) / 2;
 	});
 	return p;
 }
