@@ -63,7 +63,7 @@ function viewClick(evt){
 
 		var pname = $("input[name=points]:checked").val();
 		if (!points.hasOwnProperty(pname)) {
-			points[pname] = { x: lon, y: lat, z: alt }
+			points[pname] = { lon: lon, lat: lat, alt: alt }
 		}
 
 		// If that point has a placemark, just use the 
@@ -116,6 +116,14 @@ function g(p) {
 }
 
 function locate() {
+	// Cheat: find the intersection of the projection of the lines and use
+	// the average altitude.
+	var i2d = intersection(
+		{P1:g(points.P1), P2:g(points.P2)},
+		{P1:g(points.P3), P2:g(points.P4)});
+	i2d.z = (points.P1.alt + points.P2.alt + points.P3.alt + points.P4.alt) / 4;
+	mark(i2d, 'I');
+
 	// Find the line that connects p1,p2 and p3,p4 where they are closest to intersection.
 	var connection = closestConnection(
 		{P1:g(points.P1), P2:g(points.P2)},

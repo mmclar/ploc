@@ -11,7 +11,7 @@ function midpoint(P1, P2) {
 function dot(V1, V2) {
 	var sum = 0;
 	$(['x', 'y', 'z']).each(function(k, v) {
-		sum += V1[v] * V2[v];
+		if (V1.hasOwnProperty(v) && !isNaN(V1[v]) && !isNaN(V2[v])) sum += V1[v] * V2[v];
 	});
 	return sum;
 }
@@ -54,4 +54,17 @@ function closestConnection(L1, L2) {
 			z:L2.P1.z + mua * p43.z
 		}
 	};
+}
+
+// Given two line segments L1 and L2, return the intersection of their
+// lines or false if they don't intersect.
+function intersection(L1, L2) {
+	var p21 = vector(L1.P2, L1.P1);
+	var p43 = vector(L2.P2, L2.P1);
+	var d = p21.x * p43.y - p43.x * p21.y;
+	if (Math.abs(d) < eps) return false;
+	var p31 = vector(L2.P1, L1.P1);
+	var t = ((p31.x * p43.y) - (p43.x * p31.y)) / d;
+
+	return { x:L1.P1.x+(t*p21.x), y:L1.P1.y+(t*p21.y) };
 }

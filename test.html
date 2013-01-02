@@ -19,6 +19,12 @@ if (l.P1.x != 2) alert('Incorrect result.');
 // Simple midpoint test.
 var m = midpoint({x:0,y:0,z:0}, {x:1,y:0,z:0});
 if (Math.abs(m.x-.5) > eps) alert('Midpoint not correct.');
+
+// Test line intersection.
+var i = intersection(
+	{P1:{x:0, y:0}, P2:{x:4, y:4}},
+	{P1:{x:4, y:0}, P2:{x:0, y:4}});
+if (i.x != 2 || i.y != 2) alert('2d line intersection not correct.');
 </script>
 </body>
 </html>
