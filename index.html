@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <title>Picture Locator</title>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" type="application/javascript"></script>
+    <script src="https://cesium.com/downloads/cesiumjs/releases/1.73/Build/Cesium/Cesium.js" type="application/javascript"></script>
+    <link href="https://cesium.com/downloads/cesiumjs/releases/1.73/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+    <script src="math.js" type="application/javascript"></script>
+    <script src="ploc.js" type="application/javascript"></script>
+    <script src="defaults.js" type="application/javascript"></script>
+    <link href="style.css" rel="stylesheet"/>
+</head>
+<body>
+    <div id="map3d" style="width: 1200px; height: 800px; float: left;"></div>
+    <div id="controls">
+        <table class="points">
+            <tr>
+                <td></td>
+                <td>Lon</td>
+                <td>Lat</td>
+                <td>Alt</td>
+            </tr>
+            <tr class="af">
+                <td><label><input type="radio" name="points" value="af" checked>a<sub>f</siub></label></td>
+                <td class="lon"></td><td class="lat"></td><td class="alt"></td>
+            </tr>
+            <tr class="an">
+                <td><label><input type="radio" name="points" value="an">a<sub>n</sub></label></td>
+                <td class="lon"></td><td class="lat"></td><td class="alt"></td>
+            </tr>
+            <tr class="bf">
+                <td><label><input type="radio" name="points" value="bf">b<sub>f</sub></label></td>
+                <td class="lon"></td><td class="lat"></td><td class="alt"></td>
+            </tr>
+            <tr class="bn">
+                <td><label><input type="radio" name="points" value="bn">b<sub>n</sub></label></td>
+                <td class="lon"></td><td class="lat"></td><td class="alt"></td>
+            </tr>
+        </table>
+        <textarea rows="20" cols="40" class="log-area"></textarea>
+    </div>
+</body>
+</html>

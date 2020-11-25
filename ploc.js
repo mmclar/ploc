@@ -1,9 +1,79 @@
-var ge;
-var debug = true;
-var $ = jQuery;
-var roofHeight;
+class Ploc {
+    c = null;
+    logArea$ = null;
+    af = null;
+    an = null;
+    bf = null;
+    bn = null;
 
-google.load("earth", "1");
+    constructor(c, logArea) {
+        this.c = c;
+        this.logArea$ = logArea;
+    }
+
+    getPoints() {
+        return [this.af, this.an, this.bf, this.bn];
+    }
+
+    refreshTable() {
+        const points = this.getPoints();
+        const trs = $('#controls tr');
+        trs.each((i, tr) => {
+            const point = points[i - 1];
+            if (point) {
+                const tds = $(tr).find('td');
+                tds.each((i, td) => {
+                    if (i > 0) {
+                        td.innerHTML = point[i - 1];
+                    }
+                });
+            }
+        });
+    }
+
+    drawPoint(point) {
+        this.log('drawing point' + point);
+        this.c.entities.add({
+            description: 'datapoint',
+            position: Cesium.Cartesian3.fromDegrees(...point),
+            point: {
+                pixelSize: 10,
+                color: Cesium.Color.RED,
+            }
+        })
+    }
+
+    drawPoints() {
+        // Remove existing points
+
+        // Draw the points
+        this.getPoints().forEach((point) => {
+            if (point) {
+                this.drawPoint(point);
+            }
+        });
+    }
+
+    setPoint(name, coords) {
+        this[name] = coords;
+        this.refreshTable();
+        this.drawPoints();
+    }
+
+    log(text) {
+        this.logArea$.val(`${this.logArea$.val()}${text}\n`);
+    }
+}
+
+let ploc;
+$(()=> {
+    Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJhMTE5OWFkOC1lMTViLTQ3ZTctYTkyMC1iMmE1MDU5ZGYxZGIiLCJpZCI6MzQ4MjcsImlhdCI6MTYwMDg3MTQ5NH0.9x5LFarOqpBXM5BMPgs3V6Qz9go1mx2BqjLUvbUerKI';
+    const viewer = new Cesium.Viewer('map3d', { terrainProvider: Cesium.createWorldTerrain() });
+    // viewer.scene.primitives.add(Cesium.createOsmBuildings());
+    ploc = new Ploc(viewer, $('textarea.log-area'));
+});
+
+/*
 
 var points = {}
 
@@ -138,3 +208,4 @@ function locate() {
 
 	// Fly to the midpoint, and look towards the points that were selected.
 }
+*/
