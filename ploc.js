@@ -1,18 +1,20 @@
 class Ploc {
-    c = null;
+    viewer = null;
     logArea$ = null;
-    af = null;
-    an = null;
-    bf = null;
-    bn = null;
+    points = {
+        af: null,
+        an: null,
+        bf: null,
+        bn: null,
+    }
 
-    constructor(c, logArea) {
-        this.c = c;
+    constructor(viewer, logArea) {
+        this.viewer = viewer;
         this.logArea$ = logArea;
     }
 
     getPoints() {
-        return [this.af, this.an, this.bf, this.bn];
+        return [this.points.af, this.points.an, this.points.bf, this.points.bn].filter((p) => p !== null);
     }
 
     refreshTable() {
@@ -31,31 +33,49 @@ class Ploc {
         });
     }
 
-    drawPoint(point) {
-        this.log('drawing point' + point);
-        this.c.entities.add({
-            description: 'datapoint',
-            position: Cesium.Cartesian3.fromDegrees(...point),
+    makePointEntity(coords, name) {
+        const color = name[1] === 'f' ? Cesium.Color.GREEN : Cesium.Color.RED;
+        const position = Cesium.Cartesian3.fromDegrees(...coords);
+        return new Cesium.Entity({
+            description: 'abc',
+            position,
             point: {
                 pixelSize: 10,
-                color: Cesium.Color.RED,
-            }
-        })
-    }
-
-    drawPoints() {
-        // Remove existing points
-
-        // Draw the points
-        this.getPoints().forEach((point) => {
-            if (point) {
-                this.drawPoint(point);
+                color,
             }
         });
     }
 
+    drawPoints() {
+        // Remove existing points
+        this.viewer.entities.removeAll();
+
+        const entities = Object.keys(this.points).map((name) => this.makePointEntity(this.points[name], name));
+
+        // Draw the points
+        entities.forEach((point) => {
+            this.viewer.entities.add(point);
+        });
+
+        // Update the viewport to see all the points
+        const boundsPoints = Object.values(this.points).map((p) => Cesium.Cartesian3.fromDegrees(...p));
+        const boundingSphere = new Cesium.BoundingSphere.fromPoints(boundsPoints);
+        this.log(boundingSphere);
+        this.viewer.camera.flyTo({
+            destination: boundingSphere.center,
+            complete: () => { this.viewer.camera.moveBackward(1000); },
+        });
+
+    }
+
     setPoint(name, coords) {
-        this[name] = coords;
+        this.setPoints([[name, coords]]);
+    }
+
+    setPoints(nameCoordPairs) {
+        nameCoordPairs.forEach(([name, coords]) => {
+            this.points[name] = coords;
+        });
         this.refreshTable();
         this.drawPoints();
     }
