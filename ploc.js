@@ -89,7 +89,7 @@ let ploc;
 $(()=> {
     Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJhMTE5OWFkOC1lMTViLTQ3ZTctYTkyMC1iMmE1MDU5ZGYxZGIiLCJpZCI6MzQ4MjcsImlhdCI6MTYwMDg3MTQ5NH0.9x5LFarOqpBXM5BMPgs3V6Qz9go1mx2BqjLUvbUerKI';
     const viewer = new Cesium.Viewer('map3d', { terrainProvider: Cesium.createWorldTerrain() });
-    // viewer.scene.primitives.add(Cesium.createOsmBuildings());
+    viewer.scene.primitives.add(Cesium.createOsmBuildings());
     ploc = new Ploc(viewer, $('textarea.log-area'));
 });
 
