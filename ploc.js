@@ -89,11 +89,10 @@ class Ploc {
             entities.push(this.makeLineEntity(this.points.af, this.points.an));
             entities.push(this.makeLineEntity(this.points.bf, this.points.bn));
 
-        // Draw the entities
-        entities.forEach((entity) => {
-            this.viewer.entities.add(entity);
-        });
-
+            // Draw the entities
+            entities.forEach((entity) => {
+                this.viewer.entities.add(entity);
+            });
         }
     }
 
