@@ -57,7 +57,6 @@ class Ploc {
         const color = name[1] === 'f' ? Cesium.Color.GREEN : Cesium.Color.RED;
         const position = Cesium.Cartesian3.fromDegrees(...coords);
         return new Cesium.Entity({
-            description: 'abc',
             position,
             point: {
                 pixelSize: 10,
@@ -66,16 +65,36 @@ class Ploc {
         });
     }
 
+    makeLineEntity(fromCoords, toCoords) {
+        const color = Cesium.Color.GREEN;
+        const endpoint = extendLine(fromCoords, toCoords, 1000);
+        const positions = [fromCoords, endpoint].map((coords) => Cesium.Cartesian3.fromDegrees(...coords));
+        return new Cesium.Entity({
+            polyline: {
+                positions,
+                pixelSize: 10,
+                color,
+            }
+        })
+    }
+
     drawPoints() {
         // Remove existing points
         this.viewer.entities.removeAll();
 
         const entities = Object.keys(this.points).map((name) => this.makePointEntity(this.points[name], name));
 
-        // Draw the points
-        entities.forEach((point) => {
-            this.viewer.entities.add(point);
+        // If we have all 4 points, draw the lines
+        if (entities.length === 4) {
+            entities.push(this.makeLineEntity(this.points.af, this.points.an));
+            entities.push(this.makeLineEntity(this.points.bf, this.points.bn));
+
+        // Draw the entities
+        entities.forEach((entity) => {
+            this.viewer.entities.add(entity);
         });
+
+        }
     }
 
     zoomToPoints() {

@@ -1,3 +1,17 @@
+// Given points A and B and length l, return point B' that is the endpoint of the line segment that
+// runs from A, through (or towards) B, with length l.
+// A and B are arrays of equal length.
+// All coordinates and l are in the same units.
+function extendLine(A, B, l) {
+    const indices = [...Array(A.length).keys()];
+	const deltas = indices.map((i) => B[i] - A[i]);
+	const deltasSquared = deltas.map((d) => Math.pow(d, 2));
+	const distance = Math.sqrt(deltasSquared.reduce((d1, d2) => d1 + d2));
+	const normalizationFactor = l / distance;
+	const newDeltas = deltas.map((d) => d * normalizationFactor);
+	return indices.map((i) => A[i] + newDeltas[i]);
+}
+
 // Given a line segment defined by its endpoints, find its midpoint.
 function midpoint(P1, P2) {
 	var p = {};
