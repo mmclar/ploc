@@ -11,6 +11,26 @@ class Ploc {
     constructor(viewer, logArea) {
         this.viewer = viewer;
         this.logArea$ = logArea;
+
+        const handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
+        handler.setInputAction(function (movement) {
+            if (viewer.scene.mode !== Cesium.SceneMode.MORPHING) {
+                const pickedObject = viewer.scene.pick(movement.position);
+                if (
+                    viewer.scene.pickPositionSupported &&
+                    Cesium.defined(pickedObject)
+                ) {
+                    const cartesian = viewer.scene.pickPosition(movement.position);
+
+                    if (Cesium.defined(cartesian)) {
+                        const point = Cesium.Cartographic.fromCartesian(cartesian);
+                        const [lon, lat] = [point.longitude, point.latitude].map((n) => Cesium.Math.toDegrees(n));
+                        const name = $('#controls tr [name="points"]:checked').val();
+                        ploc.setPoints([[name, [lon, lat, point.height]]]);
+                    }
+                }
+            }
+        }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
     }
 
     getPoints() {
@@ -26,7 +46,7 @@ class Ploc {
                 const tds = $(tr).find('td');
                 tds.each((i, td) => {
                     if (i > 0) {
-                        td.innerHTML = point[i - 1];
+                        td.innerHTML = point[i - 1].toFixed(5);
                     }
                 });
             }
@@ -56,16 +76,16 @@ class Ploc {
         entities.forEach((point) => {
             this.viewer.entities.add(point);
         });
+    }
 
+    zoomToPoints() {
         // Update the viewport to see all the points
         const boundsPoints = Object.values(this.points).map((p) => Cesium.Cartesian3.fromDegrees(...p));
         const boundingSphere = new Cesium.BoundingSphere.fromPoints(boundsPoints);
-        this.log(boundingSphere);
         this.viewer.camera.flyTo({
             destination: boundingSphere.center,
             complete: () => { this.viewer.camera.moveBackward(1000); },
         });
-
     }
 
     setPoint(name, coords) {
@@ -88,7 +108,10 @@ class Ploc {
 let ploc;
 $(()=> {
     Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJhMTE5OWFkOC1lMTViLTQ3ZTctYTkyMC1iMmE1MDU5ZGYxZGIiLCJpZCI6MzQ4MjcsImlhdCI6MTYwMDg3MTQ5NH0.9x5LFarOqpBXM5BMPgs3V6Qz9go1mx2BqjLUvbUerKI';
-    const viewer = new Cesium.Viewer('map3d', { terrainProvider: Cesium.createWorldTerrain() });
+    const viewer = new Cesium.Viewer('map3d', {
+        terrainProvider: Cesium.createWorldTerrain(),
+        infoBox: false,
+    });
     viewer.scene.primitives.add(Cesium.createOsmBuildings());
     ploc = new Ploc(viewer, $('textarea.log-area'));
 });
