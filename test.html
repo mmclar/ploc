@@ -5,38 +5,38 @@
 <script src="testmath.js"></script>
 <script>
 // Parallel lines should return false.
-var l = closestConnection(
-	{P1:{x:0,y:0,z:0}, P2:{x:1,y:0,z:0}}, 
-	{P1:{x:0,y:0,z:1}, P2:{x:1,y:0,z:1}});
+// var l = closestConnection(
+// 	{P1:{x:0,y:0,z:0}, P2:{x:1,y:0,z:0}},
+// 	{P1:{x:0,y:0,z:1}, P2:{x:1,y:0,z:1}});
 // if (l) alert('Parallel lines not detected.');
 
 // A simple example that should intersect at (2,2,2,).
-var l = closestConnection(
-	{P1:{x:0,y:0,z:0}, P2:{x:4,y:4,z:4}}, 
-	{P1:{x:4,y:0,z:0}, P2:{x:0,y:4,z:4}});
+// var l = closestConnection(
+// 	{P1:{x:0,y:0,z:0}, P2:{x:4,y:4,z:4}},
+// 	{P1:{x:4,y:0,z:0}, P2:{x:0,y:4,z:4}});
 // if (!l) alert('Skew lines detected as parallel.');
 // if (l.P1.x != 2) alert('Incorrect result.');
 
 // Simple midpoint test.
-var m = midpoint({x:0,y:0,z:0}, {x:1,y:0,z:0});
+// var m = midpoint({x:0,y:0,z:0}, {x:1,y:0,z:0});
 // if (Math.abs(m.x-.5) > eps) alert('Midpoint not correct.');
 
 // Test line intersection.
-var i = intersection(
-	{P1:{x:0, y:0}, P2:{x:4, y:4}},
-	{P1:{x:4, y:0}, P2:{x:0, y:4}});
+// var i = intersection(
+// 	{P1:{x:0, y:0}, P2:{x:4, y:4}},
+// 	{P1:{x:4, y:0}, P2:{x:0, y:4}});
 // if (i.x != 2 || i.y != 2) alert('2d line intersection not correct.');
 
 // Let's do a test specific to the numbers we're using: If we drop
 // out the z-axis and do the 3d intersection, we should get the same
 // results as the 2d intersection.
-var int_3d_no_z = closestConnection(
-	{P1:{x:-75.17955792696408, y:39.95270058292888, z:0}, P2:{x:-75.17489529235564, y:39.95421966597523, z:100}},
-	{P1:{x:-75.17125624810063, y:39.95316260513156, z:100}, P2:{x:-75.16980825610847, y:39.953515587527676, z:0}});
-
-var int_2d = intersection(
-	{P1:{x:-75.17955792696408, y:39.95270058292888}, P2:{x:-75.17489529235564, y:39.95421966597523}},
-	{P1:{x:-75.17125624810063, y:39.95316260513156}, P2:{x:-75.16980825610847, y:39.953515587527676}});
+// var int_3d_no_z = closestConnection(
+// 	{P1:{x:-75.17955792696408, y:39.95270058292888, z:0}, P2:{x:-75.17489529235564, y:39.95421966597523, z:100}},
+// 	{P1:{x:-75.17125624810063, y:39.95316260513156, z:100}, P2:{x:-75.16980825610847, y:39.953515587527676, z:0}});
+//
+// var int_2d = intersection(
+// 	{P1:{x:-75.17955792696408, y:39.95270058292888}, P2:{x:-75.17489529235564, y:39.95421966597523}},
+// 	{P1:{x:-75.17125624810063, y:39.95316260513156}, P2:{x:-75.16980825610847, y:39.953515587527676}});
 // if ((Math.abs(int_3d_no_z.P1.x - int_2d.x) > eps) ||  (Math.abs(int_3d_no_z.P1.y - int_2d.y) > eps)) alert('3d and 2d intersection do not match');
 </script>
 </body>

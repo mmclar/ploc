@@ -65,16 +65,15 @@ class Ploc {
         });
     }
 
-    makeLineEntity(fromCoords, toCoords) {
-        const color = Cesium.Color.GREEN;
+    makeLineEntity(fromCoords, toCoords, color) {
         const endpoint = extendLine(fromCoords, toCoords, 1000);
         const positions = [fromCoords, endpoint].map((coords) => Cesium.Cartesian3.fromDegrees(...coords));
         return new Cesium.Entity({
             polyline: {
                 positions,
                 pixelSize: 10,
-                color,
-            }
+            },
+            color,
         })
     }
 
@@ -84,16 +83,18 @@ class Ploc {
 
         const entities = Object.keys(this.points).map((name) => this.makePointEntity(this.points[name], name));
 
-        // If we have all 4 points, draw the lines
+        // If we have all 4 points, add in the lines, and the closest connecting line
         if (entities.length === 4) {
-            entities.push(this.makeLineEntity(this.points.af, this.points.an));
-            entities.push(this.makeLineEntity(this.points.bf, this.points.bn));
-
-            // Draw the entities
-            entities.forEach((entity) => {
-                this.viewer.entities.add(entity);
-            });
+            entities.push(this.makeLineEntity(this.points.af, this.points.an), Cesium.Color.GREEN);
+            entities.push(this.makeLineEntity(this.points.bf, this.points.bn), Cesium.Color.GREEN);
+            const closestConnecting = closestConnection(this.points.af, this.points.an, this.points.bf, this.points.bn);
+            entities.push(this.makeLineEntity(...closestConnecting), Cesium.Color.ORANGE);
         }
+
+        // Draw the entities
+        entities.forEach((entity) => {
+            this.viewer.entities.add(entity);
+        });
     }
 
     zoomToPoints() {

@@ -22,29 +22,30 @@ function midpoint(P1, P2) {
 }
 
 // Find the dot product of two vectors.
-function dot(V1, V2) {
-	var sum = 0;
-	$(['x', 'y', 'z']).each(function(k, v) {
-		if (V1.hasOwnProperty(v) && !isNaN(V1[v]) && !isNaN(V2[v])) sum += V1[v] * V2[v];
+function dot(V, U) {
+	const indices = [...Array(V.length).keys()];
+	let sum = 0;
+	indices.forEach((i) => {
+		if (!isNaN(V[i]) && !isNaN(U[i])) sum += V[i] * U[i];
 	});
 	return sum;
 }
 
 // Given two points, find the difference between them.
-function vector(P1, P2) {
-	return { x:P1.x - P2.x, y:P1.y - P2.y, z:P1.z - P2.z };
+function vector(A, B) {
+	const indices = [...Array(A.length).keys()];
+	return indices.map((i) => A[i] - B[i]);
 }
 
-// Given two line segments L1 and L2 (where a line segment is defined
-// by its endpoints { P1{x, y, z}, P2{x, y, z} }, find the shortest line
-// segment that connects them.
+// Given two lines, A1-A2 and B1-B2, find the shortest line segment that connects them.
+// http://texgen.sourceforge.net/api/mymath_8h_source.html
 var eps = 0.0000000000001;
-function closestConnection(L1, L2) {
-	var p13 = vector(L1.P1, L2.P1);
-	var p43 = vector(L2.P2, L2.P1);
-	if (Math.abs(p43.x) < eps && Math.abs(p43.y) < eps && Math.abs(p43.z) < eps) return false;
-	var p21 = vector(L1.P2, L1.P1);
-	if (Math.abs(p21.x) < eps && Math.abs(p21.y) < eps && Math.abs(p21.z) < eps) return false;
+function closestConnection(A1, A2, B1, B2) {
+	var p13 = vector(A1, B1);
+	var p43 = vector(B2, B1);
+	var p21 = vector(A2, A1);
+	if (Math.abs(p43[0]) < eps && Math.abs(p43[1]) < eps && Math.abs(p43[2]) < eps) return false;
+	if (Math.abs(p21[0]) < eps && Math.abs(p21[1]) < eps && Math.abs(p21[2]) < eps) return false;
 
 	var d1343 = dot(p13, p43);
 	var d4321 = dot(p43, p21);
@@ -56,18 +57,19 @@ function closestConnection(L1, L2) {
 	if (Math.abs(denom) < eps) return false;
 	var numer = d1343 * d4321 - d1321 * d4343;
 	var mua = numer / denom;
-	return {
-		P1: {
-			x:L1.P1.x + mua * p21.x,
-			y:L1.P1.y + mua * p21.y,
-			z:L1.P1.z + mua * p21.z
-		},
-		P2: {
-			x:L2.P1.x + mua * p43.x,
-			y:L2.P1.y + mua * p43.y,
-			z:L2.P1.z + mua * p43.z
-		}
-	};
+	const mub = (d1343 + d4321 * mua) / d4343;
+	return [
+		[
+			A1[0] + mua * p21[0],
+			A1[1] + mua * p21[1],
+			A1[2] + mua * p21[2],
+		],
+		[
+			B1[0] + mub * p43[0],
+			B1[1] + mub * p43[1],
+			B1[2] + mub * p43[2],
+		]
+	];
 }
 
 // Given two line segments L1 and L2, return the intersection of their
