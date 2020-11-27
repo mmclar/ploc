@@ -1,6 +1,5 @@
 class Ploc {
     viewer = null;
-    logArea$ = null;
     points = {
         af: null,
         an: null,
@@ -8,9 +7,8 @@ class Ploc {
         bn: null,
     }
 
-    constructor(viewer, logArea) {
+    constructor(viewer) {
         this.viewer = viewer;
-        this.logArea$ = logArea;
 
         const handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
         handler.setInputAction(function (movement) {
@@ -128,10 +126,6 @@ class Ploc {
         this.refreshTable();
         this.drawPoints();
     }
-
-    log(text) {
-        this.logArea$.val(`${this.logArea$.val()}${text}\n`);
-    }
 }
 
 let ploc;
@@ -142,5 +136,5 @@ $(()=> {
         infoBox: false,
     });
     viewer.scene.primitives.add(new Cesium.Cesium3DTileset({url: Cesium.IonResource.fromAssetId(69380)}));
-    ploc = new Ploc(viewer, $('textarea.log-area'));
+    ploc = new Ploc(viewer);
 });
