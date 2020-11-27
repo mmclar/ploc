@@ -115,10 +115,6 @@ class Ploc {
         });
     }
 
-    setPoint(name, coords) {
-        this.setPoints([[name, coords]]);
-    }
-
     setPoints(nameCoordPairs) {
         nameCoordPairs.forEach(([name, coords]) => {
             this.points[name] = coords;
