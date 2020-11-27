@@ -1,7 +1,6 @@
 // Given points A and B and length l, return point B' that is the endpoint of the line segment that
 // runs from A, through (or towards) B, with length l.
 // A and B are arrays of equal length.
-// All coordinates and l are in the same units.
 function extendLine(A, B, l) {
     const indices = [...Array(A.length).keys()];
 	const deltas = indices.map((i) => B[i] - A[i]);
@@ -10,15 +9,6 @@ function extendLine(A, B, l) {
 	const normalizationFactor = l / distance;
 	const newDeltas = deltas.map((d) => d * normalizationFactor);
 	return indices.map((i) => A[i] + newDeltas[i]);
-}
-
-// Given a line segment defined by its endpoints, find its midpoint.
-function midpoint(P1, P2) {
-	var p = {};
-	$(['x', 'y', 'z']).each(function(k, v) {
-		p[v] = (P1[v] + P2[v]) / 2;
-	});
-	return p;
 }
 
 // Find the dot product of two vectors.
