@@ -37,40 +37,41 @@ function scale(V, m) {
 	return indices.map((i) => V[i] * m);
 }
 
-// Given two lines, A1-A2 and B1-B2, find the shortest line segment that connects them.
-// http://texgen.sourceforge.net/api/mymath_8h_source.html
-var eps = 0.0000000000001;
+function vectorIsZero(V) {
+	for (let i = 0; i < V.length; i++) {
+		if (Math.abs(V[i]) > Number.EPSILON) {
+			return false;
+		}
+	}
+	return true;
+}
+
+// Given two lines, p1-p2 and p3-p4, find the shortest line segment that connects them.
+// https://web.archive.org/web/20200427155530/http://paulbourke.net/geometry/pointlineplane/
+// Requires that points are in cartesian coordinate system.
 function closestConnection(p1, p2, p3, p4) {
-	let mua, mub;
+	const p13 = subtract(p1, p3),
+		p43 = subtract(p4, p3),
+		p21 = subtract(p2, p1);
+	if (vectorIsZero(p43) || vectorIsZero(p21)) {
+		return null;
+	}
 
-	let p13,p43,p21;
+	const d1343 = dot(p13, p43),
+		d4321 = dot(p43, p21),
+		d1321 = dot(p13, p21),
+		d4343 = dot(p43, p43),
+		d2121 = dot(p21, p21);
 
-	let d1343,d4321,d1321,d4343,d2121;
-	let numer,denom;
-	p13 = subtract(p1, p3);
-	p43 = subtract(p4, p3);
+	const denom = d2121 * d4343 - d4321 * d4321;
+	if (Math.abs(denom) < Number.EPSILON) {
+		return null;
+	}
 
-	// if (ABS(p43.x) < FLT_EPSILON && ABS(p43.y) < FLT_EPSILON && ABS(p43.z) < FLT_EPSILON)
-	// 	return false;
+	const numer = d1343 * d4321 - d1321 * d4343;
 
-	p21 = subtract(p2, p1);
-
-	// if (ABS(p21.x) < FLT_EPSILON && ABS(p21.y) < FLT_EPSILON && ABS(p21.z) < FLT_EPSILON)
-	// 	return false;
-
-	d1343 = dot(p13, p43);
-	d4321 = dot(p43, p21);
-	d1321 = dot(p13, p21);
-	d4343 = dot(p43, p43);
-	d2121 = dot(p21, p21);
-
-	denom = d2121 * d4343 - d4321 * d4321;
-	// if (ABS(denom) < FLT_EPSILON)
-	// 	return false;
-	numer = d1343 * d4321 - d1321 * d4343;
-
-	mua = numer / denom;
-	mub = (d1343 + d4321 * mua) / d4343;
+	const mua = numer / denom,
+		mub = (d1343 + d4321 * mua) / d4343;
 
 	pa = add(p1, scale(p21, mua));
 	pb = add(p3, scale(p43, mub));
