@@ -51,9 +51,12 @@ class Ploc {
         });
     }
 
-    makePointEntity(coords, name) {
-        const color = name[1] === 'f' ? Cesium.Color.GREEN : Cesium.Color.RED;
-        const position = Cesium.Cartesian3.fromDegrees(...coords);
+    makePointEntityCartesian(position, name) {
+        const color = {
+            'f': Cesium.Color.GREEN,    // af/bf
+            'n': Cesium.Color.RED,      // an/bn
+            'a': Cesium.Color.ORANGE,   // camera
+        }[name[1]];
         return new Cesium.Entity({
             position,
             point: {
@@ -61,6 +64,11 @@ class Ploc {
                 color,
             }
         });
+    }
+
+    makePointEntity(coords, name) {
+        const cartesian = Cesium.Cartesian3.fromDegrees(...coords);
+        return this.makePointEntityCartesian(cartesian, name);
     }
 
     makeLineEntityCartesian(fromCoords, toCoords, color) {
@@ -97,6 +105,8 @@ class Ploc {
             const closestConnectingCartesianTriples = closestConnection(...triples);
             const closestConnectingCartesian = closestConnectingCartesianTriples.map((triple) => new Cesium.Cartesian3(...triple));
             entities.push(this.makeLineEntityCartesian(closestConnectingCartesian[0], closestConnectingCartesian[1], Cesium.Color.ORANGE));
+            this.ploc = Cesium.Cartesian3.midpoint(...closestConnectingCartesian, new Cesium.Cartesian3());
+            entities.push(this.makePointEntityCartesian(this.ploc, 'camera'));
         }
 
         // Draw the entities
