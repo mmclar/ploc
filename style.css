@@ -1,5 +1,5 @@
 body { font-family: arial, sans-serif; padding: 0; margin: 0; }
 table, td, th { border: solid 1px black; border-collapse: collapse; white-space: nowrap; padding: 3px; }
 
-#map3d { width: 600px; height: 600px; float: left; }
+#map3d { width: 900px; height: 900px; float: left; }
 #controls { float: left; padding-left: 10px; }

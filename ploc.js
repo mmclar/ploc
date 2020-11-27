@@ -141,6 +141,6 @@ $(()=> {
         terrainProvider: Cesium.createWorldTerrain(),
         infoBox: false,
     });
-    viewer.scene.primitives.add(Cesium.createOsmBuildings());
+    viewer.scene.primitives.add(new Cesium.Cesium3DTileset({url: Cesium.IonResource.fromAssetId(69380)}));
     ploc = new Ploc(viewer, $('textarea.log-area'));
 });
