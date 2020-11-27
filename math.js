@@ -26,61 +26,65 @@ function dot(V, U) {
 	const indices = [...Array(V.length).keys()];
 	let sum = 0;
 	indices.forEach((i) => {
-		if (!isNaN(V[i]) && !isNaN(U[i])) sum += V[i] * U[i];
+		sum += V[i] * U[i];
 	});
 	return sum;
 }
 
-// Given two points, find the difference between them.
-function vector(A, B) {
+// Given two points, find the difference between them (A - B)
+function subtract(A, B) {
 	const indices = [...Array(A.length).keys()];
 	return indices.map((i) => A[i] - B[i]);
+}
+
+function add(V, U) {
+	const indices = [...Array(V.length).keys()];
+	return indices.map((i) => V[i] + U[i]);
+}
+
+function scale(V, m) {
+	const indices = [...Array(V.length).keys()];
+	return indices.map((i) => V[i] * m);
 }
 
 // Given two lines, A1-A2 and B1-B2, find the shortest line segment that connects them.
 // http://texgen.sourceforge.net/api/mymath_8h_source.html
 var eps = 0.0000000000001;
-function closestConnection(A1, A2, B1, B2) {
-	var p13 = vector(A1, B1);
-	var p43 = vector(B2, B1);
-	var p21 = vector(A2, A1);
-	if (Math.abs(p43[0]) < eps && Math.abs(p43[1]) < eps && Math.abs(p43[2]) < eps) return false;
-	if (Math.abs(p21[0]) < eps && Math.abs(p21[1]) < eps && Math.abs(p21[2]) < eps) return false;
+function closestConnection(p1, p2, p3, p4) {
+	let mua, mub;
 
-	var d1343 = dot(p13, p43);
-	var d4321 = dot(p43, p21);
-	var d1321 = dot(p13, p21);
-	var d4343 = dot(p43, p43);
-	var d2121 = dot(p21, p21);
+	let p13,p43,p21;
 
-	var denom = d2121 * d4343 - d4321 * d4321;
-	if (Math.abs(denom) < eps) return false;
-	var numer = d1343 * d4321 - d1321 * d4343;
-	var mua = numer / denom;
-	const mub = (d1343 + d4321 * mua) / d4343;
-	return [
-		[
-			A1[0] + mua * p21[0],
-			A1[1] + mua * p21[1],
-			A1[2] + mua * p21[2],
-		],
-		[
-			B1[0] + mub * p43[0],
-			B1[1] + mub * p43[1],
-			B1[2] + mub * p43[2],
-		]
-	];
+	let d1343,d4321,d1321,d4343,d2121;
+	let numer,denom;
+	p13 = subtract(p1, p3);
+	p43 = subtract(p4, p3);
+
+	// if (ABS(p43.x) < FLT_EPSILON && ABS(p43.y) < FLT_EPSILON && ABS(p43.z) < FLT_EPSILON)
+	// 	return false;
+
+	p21 = subtract(p2, p1);
+
+	// if (ABS(p21.x) < FLT_EPSILON && ABS(p21.y) < FLT_EPSILON && ABS(p21.z) < FLT_EPSILON)
+	// 	return false;
+
+	d1343 = dot(p13, p43);
+	d4321 = dot(p43, p21);
+	d1321 = dot(p13, p21);
+	d4343 = dot(p43, p43);
+	d2121 = dot(p21, p21);
+
+	denom = d2121 * d4343 - d4321 * d4321;
+	// if (ABS(denom) < FLT_EPSILON)
+	// 	return false;
+	numer = d1343 * d4321 - d1321 * d4343;
+
+	mua = numer / denom;
+	mub = (d1343 + d4321 * mua) / d4343;
+
+	pa = add(p1, scale(p21, mua));
+	pb = add(p3, scale(p43, mub));
+
+	return [pa, pb];
 }
 
-// Given two line segments L1 and L2, return the intersection of their
-// lines or false if they don't intersect.
-function intersection(L1, L2) {
-	var p21 = vector(L1.P2, L1.P1);
-	var p43 = vector(L2.P2, L2.P1);
-	var d = p21.x * p43.y - p43.x * p21.y;
-	if (Math.abs(d) < eps) return false;
-	var p31 = vector(L2.P1, L1.P1);
-	var t = ((p31.x * p43.y) - (p43.x * p31.y)) / d;
-
-	return { x:L1.P1.x+(t*p21.x), y:L1.P1.y+(t*p21.y) };
-}

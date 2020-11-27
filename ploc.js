@@ -87,8 +87,13 @@ class Ploc {
         if (entities.length === 4) {
             entities.push(this.makeLineEntity(this.points.af, this.points.an), Cesium.Color.GREEN);
             entities.push(this.makeLineEntity(this.points.bf, this.points.bn), Cesium.Color.GREEN);
-            const closestConnecting = closestConnection(this.points.af, this.points.an, this.points.bf, this.points.bn);
-            entities.push(this.makeLineEntity(...closestConnecting), Cesium.Color.ORANGE);
+            const cartesianPoints = [this.points.af, this.points.an, this.points.bf, this.points.bn].map((p) => Cesium.Cartesian3.fromDegrees(...p));
+            const triples = cartesianPoints.map((p) => [p.x, p.y, p.z]);
+            const closestConnectingCartesianTriples = closestConnection(...triples);
+            const closestConnectingCartesian = closestConnectingCartesianTriples.map((triple) => new Cesium.Cartesian3(...triple));
+            const closestConnectingCartographic = closestConnectingCartesian.map((p) => Cesium.Cartographic.fromCartesian(p));
+            const closestConnectingCartographicTriples = closestConnectingCartographic.map((carto) => [carto.longitude, carto.latitude, carto.height]);
+            entities.push(this.makeLineEntity(...closestConnectingCartographicTriples), Cesium.Color.ORANGE);
         }
 
         // Draw the entities
