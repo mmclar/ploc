@@ -6,6 +6,7 @@ class Ploc {
         bf: null,
         bn: null,
     }
+    ploc = null;
 
     constructor(viewer) {
         this.viewer = viewer;
@@ -132,6 +133,18 @@ class Ploc {
         this.refreshTable();
         this.drawPoints();
     }
+
+    flyToPloc() {
+        ploc.viewer.camera.flyTo({
+            destination: ploc.ploc,
+            complete: () => {
+                const boundingSphere = new Cesium.BoundingSphere.fromPoints(
+                    ['af', 'bf'].map((name) => Cesium.Cartesian3.fromDegrees(...ploc.points[name]))
+                );
+                // ploc.viewer.camera.viewBoundingSphere(boundingSphere);
+            }
+        })
+    }
 }
 
 let ploc;
@@ -143,4 +156,5 @@ $(()=> {
     });
     viewer.scene.primitives.add(new Cesium.Cesium3DTileset({url: Cesium.IonResource.fromAssetId(69380)}));
     ploc = new Ploc(viewer);
+    $('#fly-to').on('click', ploc.flyToPloc);
 });
